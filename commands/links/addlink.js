@@ -1,23 +1,41 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const Links = require("../../database/links");
 
-module.exports={
+module.exports = {
 
-data:new SlashCommandBuilder()
+data: new SlashCommandBuilder()
 .setName("addlink")
 .setDescription("Add a link")
-.addStringOption(o=>o.setName("url").setRequired(true)),
+.addStringOption(o =>
+o.setName("url")
+.setDescription("Link URL")
+.setRequired(true)
+)
+.addStringOption(o =>
+o.setName("category")
+.setDescription("Link category")
+.setRequired(true)
+.addChoices(
+{ name:"NRG Full", value:"full" },
+{ name:"NRG Lite", value:"lite" }
+))
+.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
 async execute(interaction){
 
-if(!interaction.member.roles.cache.has(process.env.ADMIN_ROLE))
-return interaction.reply({content:"No permission",ephemeral:true});
-
 const url = interaction.options.getString("url");
+const category = interaction.options.getString("category");
 
-await Links.create({url});
+await Links.create({
+url,
+type: category,   // IMPORTANT (matches panel system)
+used:false
+});
 
-interaction.reply("Link added");
+await interaction.reply({
+content:`Link added to **${category.toUpperCase()}** category.`,
+ephemeral:true
+});
 
 }
 
