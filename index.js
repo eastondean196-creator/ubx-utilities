@@ -3,11 +3,6 @@ require("dotenv").config();
 const { Client, GatewayIntentBits } = require("discord.js");
 const mongoose = require("mongoose");
 
-require("dotenv").config();
-
-const { Client, GatewayIntentBits } = require("discord.js");
-const mongoose = require("mongoose");
-
 const loadCommands = require("./core/loader");
 
 const client = new Client({
