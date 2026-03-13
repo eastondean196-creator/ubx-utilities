@@ -24,7 +24,7 @@ Welcome to the official NRG Link System.
 • Normal Users: 1 link per week  
 • NRG Premium / Booster: 3 links per week  
 
-Use the dropdowns below to select:
+Select BOTH options below before a link is sent.
 `)
 .setColor("#00AEEF")
 .setFooter({ text:"NRG Utilities • Automated System" });
@@ -61,12 +61,12 @@ emoji:"🟢"
 }
 );
 
-const row1 = new ActionRowBuilder().addComponents(deliveryMenu);
-const row2 = new ActionRowBuilder().addComponents(typeMenu);
-
 await interaction.channel.send({
 embeds:[embed],
-components:[row1, row2]
+components:[
+new ActionRowBuilder().addComponents(deliveryMenu),
+new ActionRowBuilder().addComponents(typeMenu)
+]
 });
 
 await interaction.reply({
