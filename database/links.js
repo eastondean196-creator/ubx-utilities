@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
 
-const schema = new mongoose.Schema({
-url:String,
-used:{type:Boolean,default:false},
-claimedBy:String,
-claimedAt:Number
+const linkSchema = new mongoose.Schema({
+url: { type: String, required: true },
+type: { type: String, default: "full" }, // "full" or "lite"
+used: { type: Boolean, default: false },
+claimedBy: { type: String },
+claimedAt: { type: Number }
 });
 
-module.exports = mongoose.model("links",schema);
+module.exports = mongoose.model("Links", linkSchema);
