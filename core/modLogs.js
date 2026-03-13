@@ -1,35 +1,35 @@
 const { EmbedBuilder } = require("discord.js");
 
-async function sendModLog(guild, data){
+async function sendModLog(client, guild, data) {
 
 const logChannelId = process.env.MOD_LOG_CHANNEL;
-if(!logChannelId) return;
+if (!logChannelId) return;
 
-const channel = guild.channels.cache.get(logChannelId);
-if(!channel) return;
+const channel = await client.channels.fetch(logChannelId).catch(() => null);
+if (!channel) return;
 
 const embed = new EmbedBuilder()
 .setColor(data.color || "Red")
 .setTitle(data.title || "Moderation Action")
 .addFields(
 {
-name:"User",
+name: "User",
 value: data.user ? String(data.user) : "N/A",
-inline:true
+inline: true
 },
 {
-name:"Moderator",
+name: "Moderator",
 value: data.moderator ? String(data.moderator) : "N/A",
-inline:true
+inline: true
 },
 {
-name:"Reason",
+name: "Reason",
 value: data.reason ? String(data.reason) : "No reason provided"
 }
 )
 .setTimestamp();
 
-await channel.send({ embeds:[embed] });
+await channel.send({ embeds: [embed] });
 
 }
 
