@@ -3,32 +3,66 @@ const Usage = require("../database/usage");
 
 module.exports = (client)=>{
 
-client.on("interactionCreate",async interaction=>{
+client.on("interactionCreate", async interaction=>{
 
 if(!interaction.isButton()) return;
+
+//
+// HELP BUTTONS
+//
+
+if(interaction.customId === "help_mod"){
+return interaction.reply({
+content:"/ban /kick /timeout /warn /purge",
+ephemeral:true
+});
+}
+
+if(interaction.customId === "help_links"){
+return interaction.reply({
+content:"/addlink /bulkadd /panel",
+ephemeral:true
+});
+}
+
+if(interaction.customId === "help_utils"){
+return interaction.reply({
+content:"/status /info",
+ephemeral:true
+});
+}
+
+if(interaction.customId === "help_fun"){
+return interaction.reply({
+content:"/coinflip /8ball /roll /joke /avatar",
+ephemeral:true
+});
+}
+
+//
+// LINK SYSTEM
+//
 
 if(!interaction.customId.startsWith("link")) return;
 
 const WEEK = 604800000;
 const now = Date.now();
 
-let user = await Usage.findOne({userId:interaction.user.id});
+let user = await Usage.findOne({ userId: interaction.user.id });
 
 if(!user){
 
 user = await Usage.create({
-userId:interaction.user.id,
-weekStart:now,
-count:0
+userId: interaction.user.id,
+weekStart: now,
+count: 0
 });
 
 }
 
 if(now - user.weekStart > WEEK){
-
 user.weekStart = now;
 user.count = 0;
-
 }
 
 let limit = 1;
@@ -41,26 +75,22 @@ limit = 3;
 }
 
 if(user.count >= limit){
-
 return interaction.reply({
 content:"Weekly link limit reached.",
 ephemeral:true
 });
-
 }
 
 const link = await Links.findOneAndUpdate(
-{used:false},
-{used:true,claimedBy:interaction.user.id,claimedAt:now}
+{ used:false },
+{ used:true, claimedBy:interaction.user.id, claimedAt:now }
 );
 
 if(!link){
-
 return interaction.reply({
 content:"No links available.",
 ephemeral:true
 });
-
 }
 
 user.count++;
@@ -72,14 +102,14 @@ try{
 
 await interaction.user.send(`Your NRG Link:\n${link.url}`);
 
-await interaction.reply({
+return interaction.reply({
 content:"Check your DMs!",
 ephemeral:true
 });
 
 }catch{
 
-interaction.reply({
+return interaction.reply({
 content:"Enable DMs to receive links.",
 ephemeral:true
 });
@@ -90,7 +120,7 @@ ephemeral:true
 
 if(interaction.customId === "link_reply"){
 
-interaction.reply({
+return interaction.reply({
 content:`Your NRG Link:\n${link.url}`,
 ephemeral:true
 });
