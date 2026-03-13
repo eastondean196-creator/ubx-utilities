@@ -3,9 +3,8 @@ const Usage = require("../database/usage");
 
 module.exports = (client)=>{
 
-// Store temporary selections
-client.linkDelivery = {};
-client.linkType = {};
+// Temporary user selections
+const userSelections = new Map();
 
 client.on("interactionCreate", async interaction=>{
 
@@ -49,42 +48,30 @@ ephemeral:true
 
 //
 // ===============================
-// DROPDOWN HANDLING (NEW)
+// DROPDOWNS
 // ===============================
 //
 
 if(interaction.isStringSelectMenu()){
 
-// Delivery Dropdown
+let data = userSelections.get(interaction.user.id) || {};
+
 if(interaction.customId === "link_delivery"){
-client.linkDelivery[interaction.user.id] = interaction.values[0];
-
-return interaction.reply({
-content:`Delivery set to **${interaction.values[0].toUpperCase()}**`,
-ephemeral:true
-});
+data.delivery = interaction.values[0];
+await interaction.reply({ content:"Delivery selected.", ephemeral:true });
 }
 
-// Type Dropdown
 if(interaction.customId === "link_type"){
-client.linkType[interaction.user.id] = interaction.values[0];
-
-return interaction.reply({
-content:`Link type set to **${interaction.values[0].toUpperCase()}**`,
-ephemeral:true
-});
+data.type = interaction.values[0];
+await interaction.reply({ content:"Link type selected.", ephemeral:true });
 }
 
-}
+userSelections.set(interaction.user.id, data);
 
 //
-// ===============================
-// LINK SYSTEM
-// ===============================
+// If BOTH selected → send link
 //
-
-if(!interaction.isButton()) return;
-if(!interaction.customId.startsWith("link")) return;
+if(data.delivery && data.type){
 
 const WEEK = 604800000;
 const now = Date.now();
@@ -116,24 +103,20 @@ limit = 3;
 }
 
 if(user.count >= limit){
-return interaction.reply({
+return interaction.followUp({
 content:"Weekly link limit reached.",
 ephemeral:true
 });
 }
 
-// Get selected type (full or lite)
-const type = client.linkType[interaction.user.id] || "full";
-
-// Get link matching type
 const link = await Links.findOneAndUpdate(
-{ used:false, type:type },
+{ used:false, type:data.type },
 { used:true, claimedBy:interaction.user.id, claimedAt:now }
 );
 
 if(!link){
-return interaction.reply({
-content:`No **${type.toUpperCase()}** links available.`,
+return interaction.followUp({
+content:`No **${data.type.toUpperCase()}** links available.`,
 ephemeral:true
 });
 }
@@ -141,36 +124,30 @@ ephemeral:true
 user.count++;
 await user.save();
 
-const delivery = client.linkDelivery[interaction.user.id] || "reply";
+const message = `Your NRG ${data.type.toUpperCase()} Link:\n${link.url}`;
 
-if(delivery === "dm"){
+if(data.delivery === "dm"){
 
 try{
-
-await interaction.user.send(`Your NRG ${type.toUpperCase()} Link:\n${link.url}`);
-
-return interaction.reply({
-content:"Check your DMs!",
-ephemeral:true
-});
-
+await interaction.user.send(message);
+await interaction.followUp({ content:"Check your DMs!", ephemeral:true });
 }catch{
+await interaction.followUp({ content:"Enable DMs to receive links.", ephemeral:true });
+}
 
-return interaction.reply({
-content:"Enable DMs to receive links.",
+} else {
+
+await interaction.followUp({
+content:message,
 ephemeral:true
 });
 
 }
 
+// Reset selections
+userSelections.delete(interaction.user.id);
+
 }
-
-if(delivery === "reply"){
-
-return interaction.reply({
-content:`Your NRG ${type.toUpperCase()} Link:\n${link.url}`,
-ephemeral:true
-});
 
 }
 
