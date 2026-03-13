@@ -1,9 +1,9 @@
+const { ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js");
 const Links = require("../database/links");
 const Usage = require("../database/usage");
 
 module.exports = (client)=>{
 
-// Temporary user selections
 const userSelections = new Map();
 
 client.on("interactionCreate", async interaction=>{
@@ -93,12 +93,15 @@ user.weekStart = now;
 user.count = 0;
 }
 
+//
+// 🔥 Improved Role Logic
+//
 let limit = 1;
 
-if(
-interaction.member.roles.cache.has(process.env.PREMIUM_ROLE) ||
-interaction.member.roles.cache.has(process.env.BOOSTER_ROLE)
-){
+const isPremium = interaction.member.roles.cache.has(process.env.PREMIUM_ROLE);
+const isBooster = interaction.member.roles.cache.has(process.env.BOOSTER_ROLE);
+
+if(isPremium || isBooster){
 limit = 3;
 }
 
@@ -144,8 +147,35 @@ ephemeral:true
 
 }
 
-// Reset selections
+//
+// 🔄 RESET DROPDOWNS VISUALLY
+//
 userSelections.delete(interaction.user.id);
+
+if(client.linkPanelMessage){
+
+const newDelivery = new StringSelectMenuBuilder()
+.setCustomId("link_delivery")
+.setPlaceholder("Choose Delivery Method")
+.addOptions(
+{ label:"Send in DMs", value:"dm", emoji:"📩" },
+{ label:"Send as Reply", value:"reply", emoji:"💬" }
+);
+
+const newType = new StringSelectMenuBuilder()
+.setCustomId("link_type")
+.setPlaceholder("Choose Link Type")
+.addOptions(
+{ label:"NRG Full", value:"full", emoji:"⚡" },
+{ label:"NRG Lite", value:"lite", emoji:"🟢" }
+);
+
+await client.linkPanelMessage.edit({
+components:[
+new ActionRowBuilder().addComponents(newDelivery),
+new ActionRowBuilder().addComponents(newType)
+]
+});
 
 }
 
