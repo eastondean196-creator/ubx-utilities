@@ -8,7 +8,7 @@ data: new SlashCommandBuilder()
 
 async execute(interaction){
 
-if(interaction.user.id !== process.env.OWNER_ID){
+if(interaction.user.id !== process.env.OWNER_ROLE){
 return interaction.reply({content:"Owner only command.",ephemeral:true});
 }
 
