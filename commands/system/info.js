@@ -9,16 +9,11 @@ data:new SlashCommandBuilder()
 async execute(interaction){
 
 const embed = new EmbedBuilder()
-.setTitle("NRG Utilities Bot")
+.setTitle("UBX Utilities Bot")
 .setDescription(`
-Commands
-Moderation
-Link System
-Fun
-Status
+This is a the Utilities bot for UBX
 
-Developer: RVEPRTY
-Project: NRG
+Made by RVEPRTY
 `);
 
 interaction.reply({embeds:[embed]});
