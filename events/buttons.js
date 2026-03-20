@@ -12,12 +12,6 @@ module.exports = (client) => {
 
     client.on("interactionCreate", async interaction => {
 
-        //
-        // ===============================
-        // HELP BUTTONS
-        // ===============================
-        //
-
         if (interaction.isButton()) {
 
             if (interaction.customId === "help_mod") {
@@ -49,12 +43,6 @@ module.exports = (client) => {
             }
         }
 
-        //
-        // ===============================
-        // DROPDOWNS
-        // ===============================
-        //
-
         if (interaction.isStringSelectMenu()) {
 
             let data = userSelections.get(interaction.user.id) || {};
@@ -71,9 +59,6 @@ module.exports = (client) => {
 
             userSelections.set(interaction.user.id, data);
 
-            //
-            // If BOTH selected → send link
-            //
             if (data.delivery && data.type) {
 
                 const WEEK = 604800000;
@@ -145,9 +130,6 @@ module.exports = (client) => {
 
                 }
 
-                //
-                // 🔄 RESET SELECTIONS
-                //
                 userSelections.delete(interaction.user.id);
 
                 if (client.linkPanelMessage) {
@@ -164,8 +146,8 @@ module.exports = (client) => {
                         .setCustomId("link_type")
                         .setPlaceholder("Choose Link Type")
                         .addOptions(
-                            { label: "NRG Full", value: "full", emoji: "⚡" },
-                            { label: "NRG Lite", value: "lite", emoji: "🟢" }
+                            { label: "UBX Full", value: "full", emoji: "⚡" },
+                            { label: "Nothing", value: "lite", emoji: "🪟" }
                         );
 
                     await client.linkPanelMessage.edit({
