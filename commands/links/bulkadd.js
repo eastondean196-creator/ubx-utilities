@@ -16,8 +16,8 @@ o.setName("category")
 .setDescription("Link category")
 .setRequired(true)
 .addChoices(
-{ name:"NRG Full", value:"full" },
-{ name:"NRG Lite", value:"lite" }
+{ name:"UBX", value:"full" },
+{ name:"Ignore This", value:"lite" }
 ))
 .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
