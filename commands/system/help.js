@@ -4,14 +4,14 @@ module.exports = {
 
 data: new SlashCommandBuilder()
 .setName("help")
-.setDescription("Open the NRG Utilities help panel"),
+.setDescription("Open the ubx Utilities help panel"),
 
 async execute(interaction){
 
 try{
 
 const embed = new EmbedBuilder()
-.setTitle("Welcome to the NRG Utilities bot help panel")
+.setTitle("Welcome to the ubx Utilities bot help panel")
 .setDescription("Choose what command category you want to see first.")
 .setColor(0x2b2d31);
 

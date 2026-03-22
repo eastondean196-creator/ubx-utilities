@@ -2,7 +2,7 @@ module.exports = (client)=>{
 
 client.once("ready",()=>{
 
-console.log(`NRG Bot Online: ${client.user.tag}`);
+console.log(`ubx Bot Online: ${client.user.tag}`);
 
 });
 

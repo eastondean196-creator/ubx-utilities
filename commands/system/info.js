@@ -4,7 +4,7 @@ module.exports={
 
 data:new SlashCommandBuilder()
 .setName("info")
-.setDescription("NRG bot info"),
+.setDescription("ubx bot info"),
 
 async execute(interaction){
 

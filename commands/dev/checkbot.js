@@ -56,7 +56,7 @@ const embed = new EmbedBuilder()
 .setTitle("🔎 Bot Scan Results")
 .setColor("#00AEEF")
 .setDescription(results.join("\n").slice(0,4000))
-.setFooter({text:"NRG Utilities Diagnostic System"});
+.setFooter({text:"ubx Utilities Diagnostic System"});
 
 await interaction.reply({embeds:[embed],ephemeral:true});
 

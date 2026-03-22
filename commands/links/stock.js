@@ -5,7 +5,7 @@ module.exports = {
 
 data: new SlashCommandBuilder()
 .setName("stock")
-.setDescription("Export all available NRG links")
+.setDescription("Export all available ubx links")
 .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
 async execute(interaction){
@@ -21,7 +21,7 @@ const fullList = fullLinks.map(link => link.url).join("\n");
 const liteList = liteLinks.map(link => link.url).join("\n");
 
 const textContent = 
-`NRG LINK STOCK EXPORT
+`ubx LINK STOCK EXPORT
 
 ========================
 ⚡ UBX FULL LINKS
