@@ -8,6 +8,7 @@ const responses = [
 "Absolutely not.",
 "Ask again later.",
 "It is certain.",
+"emit gas from the anus.",
 "Very doubtful."
 ];
 
